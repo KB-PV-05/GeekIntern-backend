@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
+import AlertNotification from './AlertNotification';
+
 
 const TaskScreen = ({ route }) => {
   const { user } = route.params; 
@@ -8,12 +10,15 @@ const TaskScreen = ({ route }) => {
   const [userStatus, setUserStatus] = useState('Online');
   const [isTimerRunning, setIsTimerRunning] = useState(false);
 
+ 
 
-  // also this one is to give task to the user : 'http://192.168.0.106:8000/api/tasks'
+
+
+  // also this one is to give task to the user : 'http://192.168.0.102:8000/api/tasks'
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get(`https://192.168.0.106:8000/api/tasks/${user._id}`); 
+        const response = await axios.get(`http://192.168.0.102:8000/api/tasks/${user._id}`); 
         setTasks(response.data);
       } catch (error) {
         console.log(error);
@@ -24,7 +29,7 @@ const TaskScreen = ({ route }) => {
 
   const updateStatus = async (taskId, status) => {
     try {
-      await axios.put(`https://192.168.0.106:8000/api/tasks/${taskId}`, { status });
+      await axios.put(`http://192.168.0.102:8000/api/tasks/${taskId}`, { status });
       Alert.alert('Status Updated', `Task is now ${status}`);
       setTasks(prevTasks => prevTasks.map(task =>
         task._id === taskId ? { ...task, status } : task
@@ -56,7 +61,7 @@ const TaskScreen = ({ route }) => {
   
     try {
       const response = await axios.put(
-        `https://192.168.0.106:8000/api/tasks/${taskId}/updateTaskTimer`,
+        `http://192.168.0.102:8000/api/tasks/${taskId}/updateTaskTimer`,
         { taskId, action, userId: user._id }
       );
       console.log("Backend Response:", response.data);
@@ -137,6 +142,7 @@ const TaskScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
+      
       <FlatList
         data={tasks}
         keyExtractor={(item) => item._id}

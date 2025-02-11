@@ -9,7 +9,7 @@ const SignUpScreen = ({ navigation }) => {
 
   const handleSignUp = async () => {
     try {
-      const response = await axios.post('https://192.168.0.106:8000/api/auth/register', { name, email, password });
+      const response = await axios.post('http://192.168.0.102:8000/api/auth/register', { name, email, password });
       Alert.alert('SignUp Successful', 'You can now login!');
       navigation.navigate('Login');
     } catch (error) {

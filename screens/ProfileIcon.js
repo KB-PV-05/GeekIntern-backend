@@ -19,11 +19,58 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
   const [userInfo, setUserInfo] = useState({ ...user });
   const [profilePic, setProfilePic] = useState(null); // State for profile picture
 
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get(`http://192.168.0.102:8000/api/profile/${user._id}`);
+      setUserInfo(response.data);
+      
+      let profilePicPath = response.data.profilePic;
+  
+      if (profilePicPath && profilePicPath.startsWith("/")) {
+        profilePicPath = profilePicPath.substring(1); // Remove leading slash
+      }
+  
+      if (!profilePicPath.startsWith("uploads/")) {
+        profilePicPath = `uploads/${profilePicPath}`; // Add 'uploads/' if not present
+      }
+  
+      const updatedProfilePic = `http://192.168.0.102:8000/${profilePicPath}?t=${new Date().getTime()}`;
+      console.log("Profile Picture URL after fetch:", updatedProfilePic);
+      setProfilePic(updatedProfilePic);
+    } catch (error) {
+      if (error.response) {
+        // If there's a response error (e.g., 404, 500)
+        console.error('Error fetching profile:', error.response.data);
+      } else if (error.request) {
+        // If the request was made but no response received
+        console.error('Error making request:', error.request);
+      } else {
+        // If there's an error in setting up the request
+        console.error('Request Error:', error.message);
+      }
+    }
+  };
+  
+
   useEffect(() => {
     if (user.profilePic) {
-      setProfilePic(`https://192.168.0.106:8000${user.profilePic}`);
+        let profilePicPath = user.profilePic;
+        if (profilePicPath.startsWith("/")) {
+          profilePicPath = profilePicPath.substring(1); // Remove leading slash
+        }
+        
+        // Add 'uploads/' only if it's not already part of the path
+        if (!profilePicPath.startsWith("uploads/")) {
+          profilePicPath = `uploads/${profilePicPath}`;
+        }
+        const profilePicUrl = `http://192.168.0.102:8000/${profilePicPath}`;
+        console.log("Profile Picture URL:", profilePicUrl);
+        setProfilePic(profilePicUrl);
     }
-  }, [user.profilePic]);
+}, [user.profilePic]);
+
+  
 
 
 
@@ -32,7 +79,7 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
     try {
       const userId = user._id;
       const response = await axios.put(
-        `https://192.168.0.106:8000/api/profile/${userId}/update`,
+        `http://192.168.0.102:8000/api/profile/${userId}/update`,
         { status: newStatus }
       );
       if (response.data.message === 'Profile updated successfully') {
@@ -61,7 +108,7 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
     try {
       const userId = user._id;
       const response = await axios.put(
-        `https://192.168.0.106:8000/api/profile/${userId}/update`,
+        `http://192.168.0.102:8000/api/profile/${userId}/update`,
         {
           name: userInfo.name,
           email: userInfo.email,
@@ -95,32 +142,22 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
       } else if (response.error) {
         console.error('ImagePicker Error: ', response.error);
       } else if (response.assets && response.assets[0]) {
-        const { uri } = response.assets[0];
-        setProfilePic(uri);
-
+        const { uri, fileName, type } = response.assets[0];
+        setProfilePic(uri); // Update UI immediately with the selected image
+  
         try {
-          const allowedMimeTypes = {
-            jpg: 'image/jpeg',
-            jpeg: 'image/jpeg',
-            png: 'image/png',
-            avif: 'image/avif',
-            gif: 'image/gif',
-          };
-
-          const fileExtension = uri.split('.').pop().toLowerCase(); // Get the file extension
-          const mimeType = allowedMimeTypes[fileExtension] || 'application/octet-stream';
-
           const formData = new FormData();
           formData.append('profilePic', {
             uri,
-            name: `profile-pic.${fileExtension}`,
-            type: response.assets[0].type,
+            name: fileName || `profile-pic.${uri.split('.').pop()}`,
+            type: type || 'image/jpeg', // Default type if not provided
           });
-
+  
           const userId = user._id;
-          console.log('User ID:', userId);
+          console.log('Uploading profile picture for user:', userId);
+  
           const uploadResponse = await axios.post(
-            `https://192.168.0.106:8000/api/profile/${userId}/upload`,
+            `http://192.168.0.102:8000/api/profile/${userId}/upload`,
             formData,
             {
               headers: {
@@ -128,22 +165,33 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
               },
             }
           );
-          console.log(uploadResponse);
-
+  
           if (uploadResponse.data.user && uploadResponse.data.user.profilePic) {
-            const updatedProfilePic = `https://192.168.0.106:8000/uploads/${uploadResponse.data.user.profilePic}`;
+            let profilePicPath = uploadResponse.data.user.profilePic;
+            
+            // Ensure the path does not already include 'uploads/'
+            if (profilePicPath.startsWith("/")) {
+              profilePicPath = profilePicPath.substring(1); // Remove leading slash
+            }
+            
+            
+          
+            const updatedProfilePic = `http://192.168.0.102:8000/${profilePicPath}?t=${new Date().getTime()}`;
+            console.log("Profile Picture URL after upload:", updatedProfilePic);
             setProfilePic(updatedProfilePic);
             alert('Profile picture updated successfully');
           } else {
             alert('Error retrieving profile picture URL');
           }
+             
         } catch (error) {
-          console.error(error);
+          console.error('Upload Error:', error);
           alert('Error uploading profile picture');
         }
       }
     });
   };
+  
 
   return (
     <View style={styles.iconContainer}>

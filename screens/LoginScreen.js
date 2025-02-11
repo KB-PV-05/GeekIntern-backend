@@ -17,7 +17,7 @@ const LoginScreen = ({navigation}) => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        'https://192.168.0.106:8000/api/auth/login',
+        'http://192.168.0.102:8000/api/auth/login',
         {email, password},
       );
       navigation.navigate('Tasks', {user: response.data.user});

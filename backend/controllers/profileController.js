@@ -3,8 +3,10 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure the 'uploads' directory exists in the project directory
-const uploadDir = path.join(__dirname, 'uploads');
+// Change the uploads directory to be at the project root level
+const uploadDir = path.join(__dirname, '..', 'uploads'); // Go up one level to store in root uploads/
+
+// Ensure the 'uploads' directory exists at the root level
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -12,7 +14,7 @@ if (!fs.existsSync(uploadDir)) {
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir); // Save to 'uploads' inside project directory
+    cb(null, uploadDir); // Save to 'uploads' inside the root project directory
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
