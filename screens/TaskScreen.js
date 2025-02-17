@@ -14,11 +14,11 @@ const TaskScreen = ({ route }) => {
 
 
 
-  // also this one is to give task to the user : 'http://192.168.0.102:8000/api/tasks'
+  // also this one is to give task to the user : 'https://geekintern-backend-1.onrender.com/api/tasks'
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get(`http://192.168.0.102:8000/api/tasks/${user._id}`); 
+        const response = await axios.get(`https://geekintern-backend-1.onrender.com/api/tasks/${user._id}`); 
         setTasks(response.data);
       } catch (error) {
         console.log(error);
@@ -29,7 +29,7 @@ const TaskScreen = ({ route }) => {
 
   const updateStatus = async (taskId, status) => {
     try {
-      await axios.put(`http://192.168.0.102:8000/api/tasks/${taskId}`, { status });
+      await axios.put(`https://geekintern-backend-1.onrender.com/api/tasks/${taskId}`, { status });
       Alert.alert('Status Updated', `Task is now ${status}`);
       setTasks(prevTasks => prevTasks.map(task =>
         task._id === taskId ? { ...task, status } : task
@@ -61,7 +61,7 @@ const TaskScreen = ({ route }) => {
   
     try {
       const response = await axios.put(
-        `http://192.168.0.102:8000/api/tasks/${taskId}/updateTaskTimer`,
+        `https://geekintern-backend-1.onrender.com/api/tasks/${taskId}/updateTaskTimer`,
         { taskId, action, userId: user._id }
       );
       console.log("Backend Response:", response.data);

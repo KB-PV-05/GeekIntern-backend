@@ -22,7 +22,7 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(`http://192.168.0.102:8000/api/profile/${user._id}`);
+      const response = await axios.get(`https://geekintern-backend-1.onrender.com/api/profile/${user._id}`);
       setUserInfo(response.data);
       
       let profilePicPath = response.data.profilePic;
@@ -35,7 +35,7 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
         profilePicPath = `uploads/${profilePicPath}`; // Add 'uploads/' if not present
       }
   
-      const updatedProfilePic = `http://192.168.0.102:8000/${profilePicPath}?t=${new Date().getTime()}`;
+      const updatedProfilePic = `https://geekintern-backend-1.onrender.com/${profilePicPath}?t=${new Date().getTime()}`;
       console.log("Profile Picture URL after fetch:", updatedProfilePic);
       setProfilePic(updatedProfilePic);
     } catch (error) {
@@ -64,7 +64,7 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
         if (!profilePicPath.startsWith("uploads/")) {
           profilePicPath = `uploads/${profilePicPath}`;
         }
-        const profilePicUrl = `http://192.168.0.102:8000/${profilePicPath}`;
+        const profilePicUrl = `https://geekintern-backend-1.onrender.com/${profilePicPath}`;
         console.log("Profile Picture URL:", profilePicUrl);
         setProfilePic(profilePicUrl);
     }
@@ -79,7 +79,7 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
     try {
       const userId = user._id;
       const response = await axios.put(
-        `http://192.168.0.102:8000/api/profile/${userId}/update`,
+        `https://geekintern-backend-1.onrender.com/api/profile/${userId}/update`,
         { status: newStatus }
       );
       if (response.data.message === 'Profile updated successfully') {
@@ -108,7 +108,7 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
     try {
       const userId = user._id;
       const response = await axios.put(
-        `http://192.168.0.102:8000/api/profile/${userId}/update`,
+        `https://geekintern-backend-1.onrender.com/api/profile/${userId}/update`,
         {
           name: userInfo.name,
           email: userInfo.email,
@@ -157,7 +157,7 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
           console.log('Uploading profile picture for user:', userId);
   
           const uploadResponse = await axios.post(
-            `http://192.168.0.102:8000/api/profile/${userId}/upload`,
+            `https://geekintern-backend-1.onrender.com/api/profile/${userId}/upload`,
             formData,
             {
               headers: {
@@ -176,7 +176,7 @@ const ProfileIcon = ({ user, onLogout, updateStatus, navigation }) => {
             
             
           
-            const updatedProfilePic = `http://192.168.0.102:8000/${profilePicPath}?t=${new Date().getTime()}`;
+            const updatedProfilePic = `https://geekintern-backend-1.onrender.com/${profilePicPath}?t=${new Date().getTime()}`;
             console.log("Profile Picture URL after upload:", updatedProfilePic);
             setProfilePic(updatedProfilePic);
             alert('Profile picture updated successfully');

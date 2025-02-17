@@ -1,13 +1,18 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import messaging from '@react-native-firebase/messaging';
+import notifee from '@notifee/react-native';
+import Toast from 'react-native-toast-message';
 import LoginScreen from './screens/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import TaskScreen from './screens/TaskScreen';
 import ProfileIcon from './screens/ProfileIcon';
 import AlertNotification from './screens/AlertNotification';
-import Toast from 'react-native-toast-message';
+import {initializeNotifications } from './screens/PushNotification';
+
+
 
 // Define types for navigation parameters
 type RootStackParamList = {
@@ -19,6 +24,10 @@ type RootStackParamList = {
 const Stack = createStackNavigator<RootStackParamList>();
 
 const App = () => {
+  useEffect(() => {
+    initializeNotifications();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">

@@ -17,7 +17,7 @@ const LoginScreen = ({navigation}) => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        'http://192.168.0.102:8000/api/auth/login',
+        'https://geekintern-backend-1.onrender.com/api/auth/login',
         {email, password},
       );
       navigation.navigate('Tasks', {user: response.data.user});

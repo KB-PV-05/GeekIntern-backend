@@ -21,7 +21,7 @@ const AlertNotification = ({user}) => {
     const fetchTasks = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.0.102:8000/api/tasks/${user._id}`,
+          `https://geekintern-backend-1.onrender.com/api/tasks/${user._id}`,
         );
         setTasks(response.data);
         checkNotifications(response.data);

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "514813095210",
+    "project_id": "geekintern-e337f",
+    "storage_bucket": "geekintern-e337f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:514813095210:android:f3ec5ca1c25782efbd4253",
+        "android_client_info": {
+          "package_name": "com.geekintern"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk5D3-eEJ2KDImC4YK4cWDv_3J1jm32V8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
